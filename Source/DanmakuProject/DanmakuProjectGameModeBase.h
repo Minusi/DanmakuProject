@@ -18,3 +18,4 @@ class DANMAKUPROJECT_API ADanmakuProjectGameModeBase : public AGameModeBase
 	
 	
 };
+
