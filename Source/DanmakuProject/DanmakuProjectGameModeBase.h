@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -9,13 +9,12 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Placeable)
 class DANMAKUPROJECT_API ADanmakuProjectGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
-	
-	
-	
+public:
+	ADanmakuProjectGameModeBase();
 };
 
