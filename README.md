@@ -21,3 +21,27 @@ Example : RootComponent인 Box Collision이 버그로 ProjectileMovementComponen
 
 이러한 버그는 C++에서 미리 컴포넌트들을 셋업하고 SetUpdatedComponent를 사용한후 블루프린트 클래스로 파생시킨 경우에 대해서 버그가 아닌 올바른 시뮬레이션을 제공합니다. 즉, C++로 미리 액터 전반에 대한 컴포넌트들의 프로퍼티 셋업을 코딩하십시오.
 
+
+
+# Tips Found
+이 카테고리는 언리얼 엔진에 대한 이해 도중에 알아낸 팁들을 나열한 리스트입니다.
+
+### Input
+
++ UInputComponent를 가지고 있는 클래스는 Enable Input으로 입력을 가져오는 효과를 볼 수 없으며, Possess를 사용해야 합니다. 즉, Enable Input은 그것이 없는 Actor 클래스 등에 사용되어야 합니다.
+
+
+
+### CharacterMovementComponent
+
++ Character가 Controller에 의해 이동 로직을 수행할 때, CharacterMovementComponent 내 Rotation Setting에서 Orientation...을 체크하면 별도의 메시 회전 로직을 구현하지 않고도 스켈레탈 메시를 회전시킬 수 있다.
+
+
+
+### Camera
+
++ 항상 Player Controller가 보는 방향으로 Pawn을 회전시키고 싶다면 빙의 가능한 클래스 내 Pawn 카테고리에서 UseControll[Roll/Pitch/Yaw]를 체크하면 된다. (기본적으로 Yaw는 체크되어 있음, 이 기능을 사용하지 않으려면 체크를 푸는 것이 좋다.)
+
++ 입력 받았을 때 Player Controller가 보는 방향으로 회전시키고 싶다면 위 기능을 전부 끄고 로직으로 구현해야 한다. (Get Controller Rotator-> Break Rot -> Make Rot -> Get Rotate [Forward/Right/Up] Vector -> AddMovementInput 순으로 구현)
+
++ 카메라가 입력을 받았을 때 부착된 상위 컴포넌트를 중심으로 공전할 지, 또는 자기 자신을 중심으로 회전할 지는 SpringArm에서 UsePawnRotation을 사용할 지 Camera에서 사용할 지에 따라서 결정된다.
