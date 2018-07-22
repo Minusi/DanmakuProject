@@ -35,9 +35,15 @@ Example : RootComponent인 Box Collision이 버그로 ProjectileMovementComponen
 # Tips Found
 이 카테고리는 언리얼 엔진에 대한 이해 도중에 알아낸 팁들을 나열한 리스트입니다.
 
+### Profiling
+
++ GPU 프로파일링의 단축키는 Ctrl + Shift + , 이다. 또는 콘솔에 GPU Profiling(아니면 Profile)을 타이핑하면 된다.
+
++ 더블 모니터 이상으로 작업하면 GPU에 많은 과부하가 걸리며 이는 프로파일링에서 GPU 병목현상을 야기한다. 하지만 이 점을 UE4 프로파일러에서는 말해주지 않기 때문에 (콘솔창에서 이용할 수 있는 각종 프로파일 기능들은 STAT UNIT에서 보여주는 높은 병목현상만큼의 값을 제출하지 않는다.) 제대로된 퍼포먼스를 확인하고 싶다면 싱글 모니터에서 수행하도록 하는 것이 좋다.
+
 ### Input
 
-+ UInputComponent를 가지고 있는 클래스는 Enable Input으로 입력을 가져오는 효과를 볼 수 없으며, Possess를 사용해야 합니다. 즉, Enable Input은 그것이 없는 Actor 클래스 등에 사용되어야 합니다.
++ UInputComponent를 가지고 있는 클래스는 Enable Input으로 입력을 가져오는 효과를 볼 수 없으며, Possess를 사용해야 합니다. 즉, Enable Input은 그것이 없는 Actor 클래스 등에 사용되어야 합니다. ~~~ 18.07.23 추가하자면, 입력을 가져오는 효과를 볼 수 없는지는 잘 모르겠다. Possess 상태의 객체에게 Enable Input / Disable Input은 컨트롤러의 입력을 허용 또는 차단하는 효과가 있음을 확인하였다. 추후에 연구하여 더 자세한 결과를 가져오도록 하겠다.
 
 
 
@@ -54,3 +60,10 @@ Example : RootComponent인 Box Collision이 버그로 ProjectileMovementComponen
 + 입력 받았을 때 Player Controller가 보는 방향으로 회전시키고 싶다면 위 기능을 전부 끄고 로직으로 구현해야 한다. (Get Controller Rotator-> Break Rot -> Make Rot -> Get Rotate [Forward/Right/Up] Vector -> AddMovementInput 순으로 구현)
 
 + 카메라가 입력을 받았을 때 부착된 상위 컴포넌트를 중심으로 공전할 지, 또는 자기 자신을 중심으로 회전할 지는 SpringArm에서 UsePawnRotation을 사용할 지 Camera에서 사용할 지에 따라서 결정된다.
+
+
+
+### State Machine
+
++ 스테이트 노드의 디테일 패널에 있는 3가지 이벤트들은 (Entered, Left, Blended) 단순 커스텀 이벤트로써 취급하는 것이 아니라 애님 노티파이 이벤트로 취급하므로 커스텀 이벤트로 생성해놓고 작동이 안되는 어리석은 실수를 하지 말자.
+
