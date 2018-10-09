@@ -51,7 +51,11 @@ Example : RootComponent인 Box Collision이 버그로 ProjectileMovementComponen
 
 + Character가 Controller에 의해 이동 로직을 수행할 때, CharacterMovementComponent 내 Rotation Setting에서 Orientation...을 체크하면 별도의 메시 회전 로직을 구현하지 않고도 스켈레탈 메시를 회전시킬 수 있다.
 
++ CharaterMovementComponent의 점프 부분에서 핵심 로직은 CheckJumpInput이다. 만약 점프 관련된 버그 사항이 존재한다면 이곳을 시작점으로 확대 추적하는 것이 좋다.
 
++ 같은 프레임 내에서 Jump와 JumpStopping을 호출하는 것은 버그를 야기한다. 경험적으로 Jump에 의해 Z속력 및 JumpCurrentCount의 값은 올바르게 적용되지만 JumpStopping 이후 CanJump는 true 값을 반환해야하지만 false를 반환한다. 요약하자면 Jump를 한 후 공중에서 점프를 멈춘 동작을 행하지만 논리적으로는 전혀 점프를 멈춘 동작으로 인식하지 않는 다는 점이다. 이를 해결하기 위해서는 Delay 함수 또는 SetTimer 함수를 통해 약간의 지연을 주어야 한다.
+
++ Jump 실행 경과 후 StopJumpping을 호출하지 않으면 JumpCurrentCount가 올라가지 않으므로 MaxJumpCount보다 값이 작다면 계속 점프할 수 있음.
 
 ### Camera
 
@@ -66,4 +70,14 @@ Example : RootComponent인 Box Collision이 버그로 ProjectileMovementComponen
 ### State Machine
 
 + 스테이트 노드의 디테일 패널에 있는 3가지 이벤트들은 (Entered, Left, Blended) 단순 커스텀 이벤트로써 취급하는 것이 아니라 애님 노티파이 이벤트로 취급하므로 커스텀 이벤트로 생성해놓고 작동이 안되는 어리석은 실수를 하지 말자.
+
++ 스테이트 머신 내 상태 노드의 Left State Event 또는 컨듀잇 노드에서 나가는 트랜지션 룰의 Start Event는 한 번 콜백하는 것이 아니라 무적권 3번 반응한다. 이유를 찾기 위해 수많은 테스트를 수행했지만 꿋꿋이 3번 이벤트를 발생시킨다. 따라서 단 한 번 이벤트를 발생시키고자 한다면 컨듀잇 노드에서는 End Event를 사용하도록 하자. (상태 노드 내에서는 아직 실험하지 않아서 결과를 모른다.)
+
+
+
+### Animation Sequence
+
++ 애니메이션 시퀀스는 기본적으로 Looping을 수행하며, 현재까지는 이 루핑을 강제로 중단하는 방법을 찾지 못했다(코드로 제어할 수 있을 수도 있을 것 같지만 현재 경험적으로 스크립팅은 불가능).
+
++ 시퀀스가 기본적으로 Looping하므로 스테이트 머신을 통해 애니메이션 전환을 꾀하는 경우 애니메이션이 끝나기 전에(2번째 루프를 시작하기 전에) 블렌드를 완료하는 것이 좋다. 이유는 애님 노티파이와 연관되어 있는데 애님 노티파이가 프레임의 앞부분에 존재한다면 두 번 호출되며 이것이 게임 로직에 영향을 끼치는 노티파이라면 버그를 유발할 수 있다. 마찬가지로 블렌드 타임이 너무 빨라서 프레임의 뒷부분에 존재하는 애님 노티파이를 실행하지 않을 수도 있으니 게임 로직에 영향을 주는 애님 노티파이는 무시되지 않도록 '상태 전이를 잘 고려해야한다.'
 
